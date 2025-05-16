@@ -16,10 +16,13 @@ export interface RegisterCredentials {
   name: string;
   email: string;
   password: string;
-  confirmPassword: string;
+  businessName: string;
 }
 
 export interface AuthResponse {
+  success: boolean;
+  data: object;
   user: User;
   token: string;
+  message: string;
 }

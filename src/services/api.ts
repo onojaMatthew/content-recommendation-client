@@ -1,5 +1,6 @@
 import axios, { AxiosError, AxiosInstance, InternalAxiosRequestConfig, AxiosRequestConfig, AxiosResponse } from 'axios';
-import { store, RootState } from "../store/store";
+import { RootState } from "../types/storeType";
+import { store } from '@/store/store';
 import { resetAuthState } from "../store/slices/authSlice";
 
 
@@ -39,17 +40,7 @@ api.interceptors.response.use(
       originalRequest._retry = true;
       
       try {
-        // Attempt to refresh token if using refresh tokens
-        // const refreshResponse = await api.post('/auth/refresh');
-        // const newToken = refreshResponse.data.token;
-        
-        // store.dispatch(setCredentials({ token: newToken, user: null }));
-        // localStorage.setItem('token', newToken);
-        
-        // Retry the original request with new token
-        // return api(originalRequest);
-        
-        // If refresh fails or not implemented, logout user
+       
         store.dispatch(resetAuthState());
         localStorage.removeItem('token');
         window.location.href = '/auth/login';
