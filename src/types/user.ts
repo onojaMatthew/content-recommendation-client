@@ -14,7 +14,7 @@ export interface User {
   name: string;
   email: string;
   avatar?: string;
-  role: 'user' | 'admin';
+  role: 'user' | 'admin' | 'super_admin' | 'media_manager' | 'content_creator';
   preferences: UserPreferences;
   createdAt: string;
   updatedAt: string;
