@@ -11,11 +11,13 @@ interface AuthState {
   token: string | null;
   loading: boolean;
   success: boolean;
+  business: any;
   error: string | null;
 }
 
 const initialState: AuthState = {
   user: null,
+  business: null,
   token: null,
   loading: false,
   success: false,
@@ -24,7 +26,11 @@ const initialState: AuthState = {
 
 // Helper to save token to localStorage
 const saveToken = (token: object) => {
-  localStorage.setItem('token', JSON.stringify(token));
+  if (typeof window !== 'undefined') {
+    // safe to use browser features
+    localStorage.setItem('token', JSON.stringify(token));
+  }
+ 
 };
 
 // Async thunk for user registration
@@ -73,7 +79,7 @@ export const login = createAsyncThunk<
         body: JSON.stringify(data)
       })
       
-      const resp: AuthResponse = await response.json()
+      const resp: AuthResponse = await response.json();
       saveToken(resp);
       return resp;
     } catch (error: any) {
@@ -140,7 +146,8 @@ const authSlice = createSlice({
       .addCase(signup.fulfilled, (state, action) => {
         state.loading = false;
         state.success = true;
-        state.user = action.payload.user;
+        state.user = action.payload.data.user;
+        state.business = action.payload.data.business;
         state.token = action.payload.token;
       })
       .addCase(signup.rejected, (state, action) => {
@@ -157,7 +164,7 @@ const authSlice = createSlice({
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
         state.success = true;
-        state.user = action.payload.user;
+        state.user = action.payload.data.user;
         state.token = action.payload.token;
       })
       .addCase(login.rejected, (state, action) => {

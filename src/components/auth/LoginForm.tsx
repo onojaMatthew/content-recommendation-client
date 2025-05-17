@@ -1,3 +1,4 @@
+"use client";
 
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
@@ -6,9 +7,10 @@ import Link from 'next/link';
 import LoadingSpinner from '../common/Spinner';
 import { LoginCredentials } from '@/types';
 import { useAppDispatch, useAppSelector } from '../../types/storeType';
+import { useEffect } from 'react';
 
 const LoginForm = () => {
-  const { loading, success } = useAppSelector(state => state.auth);
+  const { loading, success, business } = useAppSelector(state => state.auth);
   const dispatch = useAppDispatch();
   const router = useRouter();
 
@@ -29,11 +31,14 @@ const LoginForm = () => {
    
   };
 
-  // useEffect(() => {
-  //   if (success) {
-  //     router.push("/dashboard");
-  //   }
-  // }, [ success ]);
+  useEffect(() => {
+    if (success && business) {
+      const slug = business?.slug;
+      setValue("email", "");
+      setValue("password", "");
+      router.push(`/dashboard/${slug}`);
+    }
+  }, [ success ]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -57,9 +62,7 @@ const LoginForm = () => {
           <input type="hidden" name="remember" value="true" />
           <div className="rounded-md shadow-sm space-y-4">
             <div>
-              <label htmlFor="email" className="sr-only">
-                Email address
-              </label>
+              <label htmlFor="email" className="sr-only">Email address</label>
               <input
                 id="email"
                 type="email"

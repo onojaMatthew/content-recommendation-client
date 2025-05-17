@@ -4,19 +4,27 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-// import { RootState, useAppSelector } from '../../store/store';
-import LoginForm from '../../components/auth/LoginForm';
+import dynamic from 'next/dynamic';
+import { RootState, useAppSelector } from '@/types/storeType';
+
+const LoginForm = dynamic(() => import('../../components/auth/LoginForm'), {
+  ssr: false,
+});
 
 const LoginPage: NextPage = () => {
-  // const router = useRouter();
-  // const { user } = useAppSelector((state: RootState) => state.auth);
-
-  // Redirect if already logged in
-  // useEffect(() => {
-  //   if (user) {
-  //     // router.push('/dashboard');
-  //   }
-  // }, [user, router]);
+  const router = useRouter();
+   const { user, business } = useAppSelector((state: RootState) => state.auth);
+  
+  useEffect(() => {
+    if (business) {
+      const slug = business?.slug;
+      console.log(slug, " the slug")
+      router.push(`/dashboard/${slug}`);
+    }
+  }, [user, router]);
+  // if (typeof window !== 'undefined') {
+  //   // safe to use browser features
+  // }
 
   return (
     <div className="min-h-screen bg-gray-50">

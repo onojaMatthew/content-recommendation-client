@@ -2,13 +2,16 @@
 import { useForm } from 'react-hook-form';
 import { signup } from '../../store/slices/authSlice';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import LoadingSpinner from '../common/Spinner';
 import { useAppDispatch, useAppSelector } from '@/types/storeType';
 import { RegisterCredentials } from '@/types';
+import { useEffect } from 'react';
 
 const RegisterForm = () => {
-  const { loading } = useAppSelector(state => state.auth);
+  const { loading, success } = useAppSelector(state => state.auth);
   const dispatch = useAppDispatch();
+  const router = useRouter();
 
   const { handleSubmit, watch, register, control, setValue, formState: { errors } } = useForm({
     defaultValues: {
@@ -29,6 +32,15 @@ const RegisterForm = () => {
       
     }
   }
+
+  useEffect(() => {
+    if (success) {
+      setValue("name", "");
+      setValue("email", "")
+      setValue("password", "")
+      setValue("businessName", "")
+    }
+  }, [ success, router ])
   
 
   return (
@@ -41,7 +53,7 @@ const RegisterForm = () => {
           <p className="mt-2 text-center text-sm text-gray-600">
             Or{' '}
             <Link
-              href="/auth/login"
+              href="/login"
               className="font-medium text-primary hover:text-secondary"
             >
               sign in to your existing account

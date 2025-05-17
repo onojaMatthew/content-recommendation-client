@@ -1,4 +1,4 @@
-import { User } from "./user";
+import { User, UserPreferences } from "./user";
 
 export interface AuthState {
   user: User | null;
@@ -21,8 +21,19 @@ export interface RegisterCredentials {
 
 export interface AuthResponse {
   success: boolean;
-  data: object;
-  user: User;
+  data: {
+    user: {
+      id: string;
+      name: string;
+      email: string;
+      avatar?: string;
+      role: 'user' | 'admin' | 'super_admin' | 'media_manager' | 'content_creator';
+      preferences: UserPreferences;
+      createdAt: string;
+      updatedAt: string;
+    };
+    business: object
+  };
   token: string;
   message: string;
 }
